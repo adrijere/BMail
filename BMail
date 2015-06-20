@@ -3,10 +3,33 @@
 import  sys
 import  xml.etree.ElementTree as e
 import  smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 import  email
 import  imaplib
 import  poplib
 import  string
+
+def     set_variable(name, name2, root, cpt):
+    for x in root.iter(name):
+        name2 = x.text
+    if (cpt == 0):
+        return (name2)
+    else:
+        return (int(name2))
+
+#Parsing du fichier XML en global
+tree = e.parse('config.xml')
+root = tree.getroot()
+server = set_variable('server_smtp', 'server', root, 0)
+server_imap = set_variable('server_imap', 'server_imap', root, 0)
+server_pop = set_variable('server_pop', 'server_pop', root, 0)
+protocol = set_variable('protocol', 'protocol', root, 0)
+login = set_variable('login', 'login', root, 0)
+password = set_variable('password', 'password', root, 0)
+folder = set_variable('folder', 'folder', root, 0)
+smtp_port = set_variable('smtp_port', 'smtp_port', root, 1)
+
 
 def     get_first_text_block(email_message_instance):
     maintype = email_message_instance.get_content_maintype()
@@ -17,24 +40,26 @@ def     get_first_text_block(email_message_instance):
             elif maintype == 'text':
                 return email_message_instance.get_payload()
 
-def     set_variable(name, name2, root, cpt):
-    for x in root.iter(name):
-        name2 = x.text
-    if (cpt == 0):
-        return (name2)
-    else:
-        return (int(name2))
 
 #Protocole SMTP
 def     SMTP_protocol():
-    smtp = smtplib.SMTP(server, smtp_port) #fichier de config
-    smtp.ehlo()
-    smtp.starttls()
-    smtp.ehlo()
-    smtp.login(login, password)
-    msg = raw_input("Message: ")
-    dest = raw_input("To: ")
-    smtp.sendmail(login, dest, msg)
+   SUBJECT = raw_input("Object: ")
+   message = raw_input("Message: ")
+   TO = raw_input("To: ")
+   FROM = login
+   msg = MIMEMultipart()
+   msg['From'] = FROM
+   msg['To'] = TO
+   msg['Subject'] = SUBJECT
+   msg.attach(MIMEText(message, 'plain'))
+   mail = smtplib.SMTP(server, 25)
+   mail.ehlo()
+   mail.starttls()
+   mail.ehlo()
+   mail.login(FROM, password)
+   text = msg.as_string()
+   mail.sendmail(FROM, TO, text)
+   mail.quit()
 
 #Protocole POP3
 def     POP3_protocol():
@@ -113,17 +138,6 @@ def     loop():
         print "Unknown choice"
         print "Quit"
 
-#Parsing du fichier XML en global
-tree = e.parse('config.xml')
-root = tree.getroot()
-server = set_variable('server_smtp', 'server', root, 0)
-server_imap = set_variable('server_imap', 'server_imap', root, 0)
-server_pop = set_variable('server_pop', 'server_pop', root, 0)
-protocol = set_variable('protocol', 'protocol', root, 0)
-login = set_variable('login', 'login', root, 0)
-password = set_variable('password', 'password', root, 0)
-folder = set_variable('folder', 'folder', root, 0)
-smtp_port = set_variable('smtp_port', 'smtp_port', root, 1)
 
 def     main():
     loop()
