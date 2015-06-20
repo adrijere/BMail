@@ -1,0 +1,5 @@
+catch les erreurs de smtp login (python) et afficher un message !
+
+534 : Erreur de sécurité : connectez vous via votre navigateur
+
+535 : Nom d'utilisateur ou mot de passe incorrect !
