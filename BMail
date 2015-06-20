@@ -101,7 +101,7 @@ def     IMAP_protocol():
     mail.select("inbox")
     nb_mail = len(mail.search(None, "ALL")[1][0].split())
     nb_mail_neg = -1 * nb_mail
-    print nb_mail
+    print "Number of mails : ", nb_mail
     nb_mail_neg = nb_mail_neg - 1;
     for i in range(-1, nb_mail_neg, -1):
         result, data = mail.uid('search', None, "ALL")
