@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 
 import xml.etree.ElementTree as e
 import smtplib
@@ -21,10 +21,10 @@ tree = e.parse('config.xml')
 root = tree.getroot()
 for x in root.iter('server_smtp'):
     server = x.text
-for x in root.iter('server_receive_imap'):
-    server_receive_imap = x.text
-for x in root.iter('server_receive_pop'):
-    server_receive_pop = x.text
+for x in root.iter('server_imap'):
+    server_imap = x.text
+for x in root.iter('server_pop'):
+    server_pop = x.text
 for x in root.iter('protocol'):
     protocol = x.text
 for x in root.iter('login'):
@@ -53,7 +53,7 @@ if choice == 1:
     dest = raw_input("To: ")
     smtp.sendmail(login, dest, msg)
 elif choice == 3:
-    mail = poplib.POP3_SSL(server_receive_pop) #fichier de config
+    mail = poplib.POP3_SSL(server_pop) #fichier de config
     mail.user(login)
     mail.pass_(password)
     numMessage = len(mail.list()[1])
@@ -69,7 +69,7 @@ elif choice == 3:
         print "\n"
     mail.quit()
 elif choice == 2:
-    mail = imaplib.IMAP4_SSL(server_receive_imap) #fichier de config
+    mail = imaplib.IMAP4_SSL(server_imap) #fichier de config
     mail.login(login, password) #fichier conf
     mail.list()
     mail.select("inbox")
