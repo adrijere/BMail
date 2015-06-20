@@ -38,7 +38,11 @@ for h in root.iter('smtp_port'):
 
 #SMTP for sending mails
 print "What do you want?\n1: Send a mail\n2: Read your mail with IMAP\n3: Read ALL your mails with pop3"
-choice = input("Choice: ");
+choice = raw_input("Choice: ");
+try:
+    choice = int(choice)
+except:
+    print "je ne suis pas un int"
 if choice == 1:
     smtp = smtplib.SMTP(server, smtp_port) #fichier de config
     smtp.ehlo()
