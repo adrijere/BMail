@@ -42,14 +42,14 @@ def     get_first_text_block(email_message_instance):
 #Protocole SMTP
 def     SMTP_protocol():
    SUBJECT = raw_input("Object: ")
-   message = raw_input("Message: ")
+   message1 = raw_input("Message: ")
    TO = raw_input("To: ")
    FROM = login
    message = MIMEMultipart()
    message['From'] = FROM
    message['To'] = TO
    message['Subject'] = SUBJECT
-   message.attach(MIMEText(message, 'plain'))
+   message.attach(MIMEText(message1, 'plain'))
    mail = smtplib.SMTP(server, smtp_port)
    mail.ehlo()
    mail.starttls()
