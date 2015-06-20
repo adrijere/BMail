@@ -54,16 +54,28 @@ def     SMTP_protocol():
    mail.ehlo()
    mail.starttls()
    mail.ehlo()
-   mail.login(FROM, password)
+   try:
+       mail.login(FROM, password)
+   except:
+       print "Username or password is incorrect. Verify with your browser."
+       sys.exit()
    text = message.as_string()
-   mail.sendmail(FROM, TO, text)
+   try:
+       mail.sendmail(FROM, TO, text)
+   except:
+       print "Can't send the mail. Verify the adress of the message recipient."
+       sys.exit()
    mail.quit()
 
 #Protocole POP3
 def     POP3_protocol():
     mail = poplib.POP3_SSL(server_pop) #fichier de config
-    mail.user(login)
-    mail.pass_(password)
+    try:
+        mail.user(login)
+        mail.pass_(password)
+    except:
+        print "Username or password is incorrect."
+        sys.exit()
     numMessage = len(mail.list()[1])
     for i in reversed(range(numMessage)):
         message = mail.retr(i + 1)
@@ -80,7 +92,11 @@ def     POP3_protocol():
 #Protocole IMAP
 def     IMAP_protocol():
     mail = imaplib.IMAP4_SSL(server_imap) #fichier de config
-    mail.login(login, password) #fichier conf
+    try:
+        mail.login(login, password) #fichier conf
+    except:
+        print "Username or password is incorrect."
+        sys.exit()
     mail.list()
     mail.select("inbox")
     nb_mail = len(mail.search(None, "ALL")[1][0].split())
@@ -113,11 +129,15 @@ def     IMAP_protocol():
         print get_first_text_block(email_message)
     elif choice == 2:
         choice = input("Enter the number of the mail: ")
-        choice = -1 * choice
-        result, data = mail.search(None, "ALL");
-        latest_email_uid = data[0].split()[choice]
-        mail.store(latest_email_uid, '+FLAGS', '\\Deleted')
-        mail.expunge()
+        try:
+            choice = -1 * choice
+            result, data = mail.search(None, "ALL");
+            latest_email_uid = data[0].split()[choice]
+            mail.store(latest_email_uid, '+FLAGS', '\\Deleted')
+            mail.expunge()
+        except:
+            print "Can't possible to delete message."
+            sys.exit()
 
 def     loop():
     print "What do you want?\n1: Send a mail\n2: Read your mail with IMAP\n3: Read ALL your mails with pop3"
