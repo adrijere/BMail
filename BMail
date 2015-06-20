@@ -1,13 +1,14 @@
 #!/usr/bin/python2.7
 
-import xml.etree.ElementTree as e
-import smtplib
-import email
-import imaplib
-import poplib
-import string
+import  sys
+import  xml.etree.ElementTree as e
+import  smtplib
+import  email
+import  imaplib
+import  poplib
+import  string
 
-def get_first_text_block(email_message_instance):
+def     get_first_text_block(email_message_instance):
     maintype = email_message_instance.get_content_maintype()
     if maintype == 'multipart':
         for part in email_message_instance.get_payload():
@@ -16,34 +17,16 @@ def get_first_text_block(email_message_instance):
             elif maintype == 'text':
                 return email_message_instance.get_payload()
 
-#XML parsing
-tree = e.parse('config.xml')
-root = tree.getroot()
-for x in root.iter('server_smtp'):
-    server = x.text
-for x in root.iter('server_imap'):
-    server_imap = x.text
-for x in root.iter('server_pop'):
-    server_pop = x.text
-for x in root.iter('protocol'):
-    protocol = x.text
-for x in root.iter('login'):
-    login = x.text
-for x in root.iter('password'):
-    password = x.text
-for x in root.iter('folder'):
-    folder = x.text
-for x in root.iter('smtp_port'):
-    smtp_port = int(x.text)
+def     set_variable(name, name2, root, cpt):
+    for x in root.iter(name):
+        name2 = x.text
+    if (cpt == 0):
+        return (name2)
+    else:
+        return (int(name2))
 
-#SMTP for sending mails
-print "What do you want?\n1: Send a mail\n2: Read your mail with IMAP\n3: Read ALL your mails with pop3"
-choice = raw_input("Choice: ");
-try:
-    choice = int(choice)
-except:
-    choice = 5
-if choice == 1:
+#Protocole SMTP
+def     SMTP_protocol():
     smtp = smtplib.SMTP(server, smtp_port) #fichier de config
     smtp.ehlo()
     smtp.starttls()
@@ -52,7 +35,9 @@ if choice == 1:
     msg = raw_input("Message: ")
     dest = raw_input("To: ")
     smtp.sendmail(login, dest, msg)
-elif choice == 3:
+
+#Protocole POP3
+def     POP3_protocol():
     mail = poplib.POP3_SSL(server_pop) #fichier de config
     mail.user(login)
     mail.pass_(password)
@@ -68,7 +53,9 @@ elif choice == 3:
         print get_first_text_block(themail)
         print "\n"
     mail.quit()
-elif choice == 2:
+
+#Protocole IMAP
+def     IMAP_protocol():
     mail = imaplib.IMAP4_SSL(server_imap) #fichier de config
     mail.login(login, password) #fichier conf
     mail.list()
@@ -83,18 +70,14 @@ elif choice == 2:
         result, data = mail.uid('fetch', latest_email_uid, '(RFC822)')
         raw_email = data[0][1]
         email_message = email.message_from_string(raw_email)
-
         numero_chrono = i * -1
         print numero_chrono
         print email_message['Delivered-To']
         print email.utils.parseaddr(email_message['From'])
         print email_message['Subject']
-
-
     choice = input("What do you want?:\n1: Read an Email\n2:Delete a Email ")
     if choice == 1:
         choice = input("Enter the number of the mail: ")
-
         choice = choice * -1
         result, data = mail.uid('search', None, "ALL")
         latest_email_uid = data[0].split()[choice]
@@ -105,16 +88,45 @@ elif choice == 2:
         print email.utils.parseaddr(email_message['From'])
         print email_message['Subject']
         print get_first_text_block(email_message)
-
-
     elif choice == 2:
         choice = input("Enter the number of the mail: ")
-
         choice = -1 * choice
         result, data = mail.search(None, "ALL");
         latest_email_uid = data[0].split()[choice]
         mail.store(latest_email_uid, '+FLAGS', '\\Deleted')
         mail.expunge()
-else:
-    print "Unknown choice"
-    print "Quit"
+
+def     loop():
+    print "What do you want?\n1: Send a mail\n2: Read your mail with IMAP\n3: Read ALL your mails with pop3"
+    choice = raw_input("Choice: ");
+    try:
+        choice = int(choice)
+    except:
+        choice = 5
+    if choice == 1:
+        SMTP_protocol()
+    elif choice == 3:
+        POP3_protocol()
+    elif choice == 2:
+        IMAP_protocol()
+    else:
+        print "Unknown choice"
+        print "Quit"
+
+#Parsing du fichier XML en global
+tree = e.parse('config.xml')
+root = tree.getroot()
+server = set_variable('server_smtp', 'server', root, 0)
+server_imap = set_variable('server_imap', 'server_imap', root, 0)
+server_pop = set_variable('server_pop', 'server_pop', root, 0)
+protocol = set_variable('protocol', 'protocol', root, 0)
+login = set_variable('login', 'login', root, 0)
+password = set_variable('password', 'password', root, 0)
+folder = set_variable('folder', 'folder', root, 0)
+smtp_port = set_variable('smtp_port', 'smtp_port', root, 1)
+
+def     main():
+    loop()
+
+if __name__ == '__main__':
+    sys.exit(main())
