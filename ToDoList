@@ -1,8 +1,4 @@
-Ajouter option "OBJET :" au mail
-
 Ajouter interface graphique
-
-Couper les choices en fonction
 
 catch les erreurs de smtp login (python) et afficher un message !
 
