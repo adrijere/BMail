@@ -30,7 +30,6 @@ password = set_variable('password', 'password', root, 0)
 folder = set_variable('folder', 'folder', root, 0)
 smtp_port = set_variable('smtp_port', 'smtp_port', root, 1)
 
-
 def     get_first_text_block(email_message_instance):
     maintype = email_message_instance.get_content_maintype()
     if maintype == 'multipart':
@@ -40,24 +39,23 @@ def     get_first_text_block(email_message_instance):
             elif maintype == 'text':
                 return email_message_instance.get_payload()
 
-
 #Protocole SMTP
 def     SMTP_protocol():
    SUBJECT = raw_input("Object: ")
    message = raw_input("Message: ")
    TO = raw_input("To: ")
    FROM = login
-   msg = MIMEMultipart()
-   msg['From'] = FROM
-   msg['To'] = TO
-   msg['Subject'] = SUBJECT
-   msg.attach(MIMEText(message, 'plain'))
+   message = MIMEMultipart()
+   message['From'] = FROM
+   message['To'] = TO
+   message['Subject'] = SUBJECT
+   message.attach(MIMEText(message, 'plain'))
    mail = smtplib.SMTP(server, 25)
    mail.ehlo()
    mail.starttls()
    mail.ehlo()
    mail.login(FROM, password)
-   text = msg.as_string()
+   text = message.as_string()
    mail.sendmail(FROM, TO, text)
    mail.quit()
 
@@ -68,8 +66,8 @@ def     POP3_protocol():
     mail.pass_(password)
     numMessage = len(mail.list()[1])
     for i in reversed(range(numMessage)):
-        msg = mail.retr(i + 1)
-        strmail = string.join(msg[1], "\n")
+        message = mail.retr(i + 1)
+        strmail = string.join(message[1], "\n")
         themail = email.message_from_string(strmail)
         print themail["From"]
         print themail["Subject"]
@@ -137,7 +135,6 @@ def     loop():
     else:
         print "Unknown choice"
         print "Quit"
-
 
 def     main():
     loop()
