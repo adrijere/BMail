@@ -19,22 +19,22 @@ def get_first_text_block(email_message_instance):
 #XML parsing
 tree = e.parse('config.xml')
 root = tree.getroot()
-for a in root.iter('server_smtp'):
-    server = a.text
-for y in root.iter('server_receive_imap'):
-    server_receive_imap = y.text
-for z in root.iter('server_receive_pop'):
-    server_receive_pop = z.text
-for b in root.iter('protocol'):
-    protocol = b.text
-for c in root.iter('login'):
-    login = c.text
-for d in root.iter('password'):
-    password = d.text
-for h in root.iter('folder'):
-    folder = h.text
-for h in root.iter('smtp_port'):
-    smtp_port = int(h.text)
+for x in root.iter('server_smtp'):
+    server = x.text
+for x in root.iter('server_receive_imap'):
+    server_receive_imap = x.text
+for x in root.iter('server_receive_pop'):
+    server_receive_pop = x.text
+for x in root.iter('protocol'):
+    protocol = x.text
+for x in root.iter('login'):
+    login = x.text
+for x in root.iter('password'):
+    password = x.text
+for x in root.iter('folder'):
+    folder = x.text
+for x in root.iter('smtp_port'):
+    smtp_port = int(x.text)
 
 #SMTP for sending mails
 print "What do you want?\n1: Send a mail\n2: Read your mail with IMAP\n3: Read ALL your mails with pop3"
@@ -42,7 +42,7 @@ choice = raw_input("Choice: ");
 try:
     choice = int(choice)
 except:
-    print "je ne suis pas un int"
+    choice = 5
 if choice == 1:
     smtp = smtplib.SMTP(server, smtp_port) #fichier de config
     smtp.ehlo()
@@ -116,4 +116,5 @@ elif choice == 2:
         mail.store(latest_email_uid, '+FLAGS', '\\Deleted')
         mail.expunge()
 else:
+    print "Unknown choice"
     print "Quit"
