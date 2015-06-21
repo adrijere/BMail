@@ -50,10 +50,14 @@ def     SMTP_protocol():
    message['To'] = TO
    message['Subject'] = SUBJECT
    message.attach(MIMEText(message1, 'plain'))
-   mail = smtplib.SMTP(server, smtp_port)
-   mail.ehlo()
-   mail.starttls()
-   mail.ehlo()
+   try:
+       mail = smtplib.SMTP(server, smtp_port)
+       mail.ehlo()
+       mail.starttls()
+       mail.ehlo()
+   except:
+       print "Can't connect to the smtp server."
+       sys.exit()
    try:
        mail.login(FROM, password)
    except:
@@ -61,7 +65,10 @@ def     SMTP_protocol():
        sys.exit()
    text = message.as_string()
    try:
-       mail.sendmail(FROM, TO.split(','), text)
+       if (TO.find(',') != -1) :
+           mail.sendmail(FROM, TO.split(','), text)
+       else:
+           mail.sendmail(FROM, TO, text)
    except:
        print "Can't send the mail. Verify the adress of the message recipient."
        sys.exit()
