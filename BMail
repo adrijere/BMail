@@ -140,7 +140,7 @@ def     IMAP_protocol():
             sys.exit()
 
 def     loop():
-    print "What do you want?\n1: Send a mail\n2: Read your mail with IMAP\n3: Read ALL your mails with pop3"
+    print "What do you want?\n1: Send a mail\n2: Read your mail with IMAP\n3: Read ALL your mails with POP3"
     choice = raw_input("Choice: ");
     try:
         choice = int(choice)
