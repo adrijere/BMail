@@ -43,7 +43,7 @@ def     get_first_text_block(email_message_instance):
 def     SMTP_protocol():
    SUBJECT = raw_input("Object: ")
    message1 = raw_input("Message: ")
-   TO = raw_input("To : ")
+   TO = raw_input("To (address1@toto.com,address2@toto.fr,address3@toto.eu,...) or just (address1@toto.com) : ")
    FROM = login
    message = MIMEMultipart()
    message['From'] = FROM
@@ -65,7 +65,10 @@ def     SMTP_protocol():
        sys.exit()
    text = message.as_string()
    try:
-       mail.sendmail(FROM, TO, text)
+       if (TO.find(',') != -1) :
+           mail.sendmail(FROM, TO.split(','), text)
+       else:
+           mail.sendmail(FROM, TO, text)
    except:
        print "Can't send the mail. Verify the adress of the message recipient."
        sys.exit()

@@ -2,10 +2,10 @@
 <data>
   <protocol>imap</protocol>
   <smtp_port>25</smtp_port>
-  <server_smtp>smtp-mail.outlook.com</server_smtp> #smtp server used in mail account. smtp-mail.outlook.com for outlook
-  <server_pop>pop-mail.outlook.com</server_pop> #pop server used in mail account. pop-mail.outlook.com for outlook
-  <server_imap>imap-mail.outlook.com</server_imap> #imap server used in mail account. imap-mail.outlook.com for outlook
-  <login>alix.amoureux@epitech.eu</login> #email adress. firstname.name@epitech.eu for epitech mail adress.
-  <password>djiyrYj1</password> #password of the account
+  <server_smtp></server_smtp> #smtp server used in mail account. smtp-mail.outlook.com for outlook
+  <server_pop></server_pop> #pop server used in mail account. pop-mail.outlook.com for outlook
+  <server_imap></server_imap> #imap server used in mail account. imap-mail.outlook.com for outlook
+  <login></login> #email adress. firstname.name@epitech.eu for epitech mail adress.
+  <password></password> #password of the account
   <folder>folder</folder> #specify the folder in whitch we want to display the mails
 </data>
